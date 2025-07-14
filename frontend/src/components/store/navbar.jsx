@@ -1,10 +1,70 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import authUtils from '../../utils/auth';
 import logo from '../../../public/images/logo.png';
 
 export default function navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(3); // Simulado - número de productos en carrito
+  const [user, setUser] = useState(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const navigate = useNavigate();
+
+  // Funciones de navegación y autenticación
+  const handleLogin = () => {
+    setIsMenuOpen(false);
+    navigate('/login');
+  };
+
+  const handleLogout = () => {
+    authUtils.logout();
+    setUser(null);
+    setShowUserMenu(false);
+    setIsMenuOpen(false);
+    navigate('/tienda');
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Verificar autenticación al cargar el componente
+  useEffect(() => {
+    const checkAuth = () => {
+      const isAuth = authUtils.isAuthenticated();
+      const userData = authUtils.getUserData();
+      
+      if (isAuth && userData) {
+        setUser(userData);
+      } else {
+        setUser(null);
+      }
+    };
+    
+    // Verificar al cargar
+    checkAuth();
+
+    // Escuchar cambios en localStorage
+    const handleStorageChange = (e) => {
+      if (e.key === 'user_data' || e.key === 'auth_token') {
+        checkAuth();
+      }
+    };
+
+    // Escuchar eventos customizados para cambios de auth
+    const handleAuthChange = () => {
+      checkAuth();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('authChanged', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authChanged', handleAuthChange);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,13 +72,20 @@ export default function navbar() {
       setIsScrolled(scrollTop > 0);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    const handleClickOutside = (event) => {
+      if (showUserMenu && !event.target.closest('.user-menu-container')) {
+        setShowUserMenu(false);
+      }
+    };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+    window.addEventListener('scroll', handleScroll);
+    document.addEventListener('click', handleClickOutside);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showUserMenu]);
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -91,7 +158,7 @@ export default function navbar() {
           </div>
 
           {/* Iconos de acción - Desktop */}
-          <div className='hidden lg:flex items-center space-x-6'>
+          <div className='hidden lg:flex items-center space-x-4'>
             {/* Carrito */}
             <a href="/tienda/carrito" className='flex items-center space-x-2 p-2 text-gray-700 hover:text-[#6FAD46] transition-colors relative group'>
               <div className='relative'>
@@ -108,6 +175,61 @@ export default function navbar() {
                 Mi Carrito
               </span>
             </a>
+
+            {/* Autenticación */}
+            {user ? (
+              // Usuario logueado - Mostrar dropdown
+              <div className="relative user-menu-container">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center bg-[#111827] text-white px-4 py-2 rounded-full font-medium hover:bg-[#232f46] transition-colors duration-300 shadow-md hover:shadow-lg"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  {user.name}
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {/* Dropdown del usuario */}
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                      <p className="text-sm text-gray-500">{user.email}</p>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        navigate('/admin');
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Panel Administrativo
+                    </button>
+                    <button 
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                    >
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Usuario no logueado - Mostrar botón de login
+              <button
+                onClick={handleLogin}
+                className="flex items-center bg-gray-700 text-white px-4 py-2 rounded-full font-medium hover:bg-gray-800 transition-colors duration-300 shadow-md hover:shadow-lg"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+                Iniciar Sesión
+              </button>
+            )}
 
             {/* Botón volver al sitio principal */}
             <a 
@@ -205,9 +327,48 @@ export default function navbar() {
             <a href="/tienda/carrito" className='block text-gray-700 hover:text-[#6FAD46] transition-colors'>
               🛒 Mi Carrito
             </a>
-            <a href="#" className='block text-gray-700 hover:text-[#6FAD46] transition-colors'>
-              👤 Mi Cuenta
-            </a>
+            
+            {/* Autenticación móvil */}
+            {user ? (
+              // Usuario logueado - Opciones móvil
+              <>
+                <div className="border-t pt-4">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-8 h-8 bg-[#6FAD46] rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">{user.name.charAt(0).toUpperCase()}</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{user.name}</p>
+                      <p className="text-sm text-gray-500">{user.email}</p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      navigate('/admin');
+                      setIsMenuOpen(false);
+                    }}
+                    className="block w-full text-left text-gray-700 hover:text-[#6FAD46] font-medium transition-colors py-2"
+                  >
+                    ⚙️ Panel Admin
+                  </button>
+                  <button 
+                    onClick={handleLogout}
+                    className="block w-full text-left text-red-600 hover:text-red-700 font-medium transition-colors py-2"
+                  >
+                    � Cerrar Sesión
+                  </button>
+                </div>
+              </>
+            ) : (
+              // Usuario no logueado - Botón login móvil
+              <button 
+                onClick={handleLogin}
+                className="block w-full bg-gray-700 text-white px-4 py-3 rounded-lg font-medium text-center hover:bg-gray-800 transition-colors"
+              >
+                🔑 Iniciar Sesión
+              </button>
+            )}
+            
             <a href="#" className='block text-gray-700 hover:text-[#6FAD46] transition-colors'>
               ❤️ Mis Favoritos
             </a>

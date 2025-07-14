@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/store/navbar';
 import Footer from '../components/footer';
+import ChatbotFlotante from '../components/whatsappFlotante';
 
 export default function LayoutStore({ children }) {
   return (
@@ -11,8 +12,12 @@ export default function LayoutStore({ children }) {
       <div className='pt-20'>
         {children}
       </div>
+      
       {/* Footer */}
       <Footer/>
+      
+      {/* Chatbot */}
+      <ChatbotFlotante />
     </div>
   );
 }
