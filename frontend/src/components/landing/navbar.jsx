@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import authUtils from '../../utils/auth';
-import logo from '../../../public/images/logo.png';
+import logo from '../../../public/XICA-LOGO.png';
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -132,16 +132,12 @@ export default function Navbar() {
                 isScrolled || isMenuOpen ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-sm'
             }`}>
                 <div className='max-w-7xl mx-auto px-6 lg:px-8'>
-                    <div className='flex items-center justify-between h-16'>
+                    <div className='flex items-center justify-between h-28'>
                         
                         {/* Logo y nombre */}
                         <div className='flex items-center'>
-                            <button onClick={navigateToHome} className='flex items-center space-x-3 cursor-pointer'>
-                                <img src={logo} alt="Xicalango Logo" className='h-10 w-10 rounded-full object-cover' />
-                                <div>
-                                    <span className='text-xl font-bold text-gray-800'>Xicalango</span>
-                                    <span className='block text-xs text-[#6FAD46] font-medium'>La Reserva Ecológica</span>
-                                </div>
+                            <button onClick={navigateToHome} className='flex items-center cursor-pointer'>
+                                <img src={logo} alt="Xicalango Logo" className='h-24 w-auto object-contain shadow-sm hover:shadow-md transition-shadow duration-300' />
                             </button>
                         </div>
 
