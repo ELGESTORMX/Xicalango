@@ -4,7 +4,9 @@ import jwt from 'jsonwebtoken';
 
 export const login = async (req, res) => {
   try {
+        console.log(req.body);
     const { email, password } = req.body;
+
     // Validación básica
     if (!email || !password) {
       return res.status(400).json({ message: 'Todos los campos son obligatorios' });
