@@ -17,14 +17,14 @@ export default function ChatbotFlotante() {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       
       if (type === 'open') {
-        // Sonido suave de apertura (do-mi-sol)
-        playNote(audioContext, 523.25, 0.1, 0.05); // Do
-        setTimeout(() => playNote(audioContext, 659.25, 0.1, 0.05), 100); // Mi
-        setTimeout(() => playNote(audioContext, 783.99, 0.15, 0.05), 200); // Sol
+        // Sonido suave de apertura (do-mi-sol) - Volumen aumentado
+        playNote(audioContext, 523.25, 0.1, 0.2); // Do
+        setTimeout(() => playNote(audioContext, 659.25, 0.1, 0.2), 100); // Mi
+        setTimeout(() => playNote(audioContext, 783.99, 0.15, 0.25), 200); // Sol
       } else if (type === 'message') {
-        // Sonido de mensaje (notification suave)
-        playNote(audioContext, 880, 0.1, 0.03); // La
-        setTimeout(() => playNote(audioContext, 1046.5, 0.1, 0.03), 80); // Do octava alta
+        // Sonido de mensaje (notification suave) - Volumen aumentado
+        playNote(audioContext, 880, 0.1, 0.15); // La
+        setTimeout(() => playNote(audioContext, 1046.5, 0.1, 0.15), 80); // Do octava alta
       }
     } catch (error) {
       // Silenciosamente manejar errores de audio
@@ -32,7 +32,7 @@ export default function ChatbotFlotante() {
     }
   };
 
-  const playNote = (audioContext, frequency, duration, volume = 0.1) => {
+  const playNote = (audioContext, frequency, duration, volume = 0.2) => {
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
     
@@ -370,18 +370,76 @@ export default function ChatbotFlotante() {
 
       {/* Floating Button - Solo visible cuando el chat está cerrado */}
       {!isOpen && (
-        <button
-          onClick={toggleChat}
-          className="w-14 h-14 bg-[#6FAD46] hover:bg-[#5a9639] rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110"
-        >
-          <div className="relative">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+        <div className="relative group">
+          {/* Tooltip */}
+          <div className="absolute bottom-16 right-0 mb-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-95 group-hover:scale-100 pointer-events-none">
+            <div className="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium whitespace-nowrap relative">
+              {isInStore ? (
+                <>
+                  <span className="text-green-400">🤖</span> ¡Chatea con nosotros!
+                  <br />
+                  <span className="text-xs text-gray-300">Te ayudamos con tu compra</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-green-400">🤖</span> ¡Conversemos!
+                  <br />
+                  <span className="text-xs text-gray-300">Asesoría gratuita en jardinería</span>
+                </>
+              )}
+              {/* Flecha del tooltip */}
+              <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+            </div>
           </div>
-        </button>
+
+          {/* Anillos de pulso */}
+          <div className="absolute inset-0 animate-ping">
+            <div className="w-14 h-14 bg-[#6FAD46] rounded-full opacity-75"></div>
+          </div>
+          <div className="absolute inset-0 animate-pulse animation-delay-300">
+            <div className="w-14 h-14 bg-[#6FAD46] rounded-full opacity-60"></div>
+          </div>
+          <div className="absolute inset-0 animate-bounce animation-delay-500">
+            <div className="w-14 h-14 bg-[#6FAD46] rounded-full opacity-40"></div>
+          </div>
+          
+          {/* Botón principal */}
+          <button
+            onClick={toggleChat}
+            className="relative w-14 h-14 bg-[#6FAD46] hover:bg-[#5a9639] rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 animate-bounce group-hover:shadow-xl"
+            style={{
+              animation: 'bounce 2s infinite, glow 2s ease-in-out infinite alternate'
+            }}
+          >
+            <div className="relative">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+            </div>
+          </button>
+        </div>
       )}
+
+      {/* Estilos CSS para las animaciones personalizadas */}
+      <style jsx>{`
+        @keyframes glow {
+          from {
+            box-shadow: 0 0 10px #6FAD46, 0 0 20px #6FAD46, 0 0 30px #6FAD46;
+          }
+          to {
+            box-shadow: 0 0 20px #6FAD46, 0 0 30px #6FAD46, 0 0 40px #6FAD46;
+          }
+        }
+        
+        .animation-delay-300 {
+          animation-delay: 0.3s;
+        }
+        
+        .animation-delay-500 {
+          animation-delay: 0.5s;
+        }
+      `}</style>
     </div>
   );
 }

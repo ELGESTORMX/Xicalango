@@ -166,24 +166,6 @@ export default function contact() {
               </h3>
               
               <div className='space-y-6'>
-                {/* Dirección */}
-                <div className='flex items-start'>
-                  <div className='w-12 h-12 bg-[#6FAD46] rounded-full flex items-center justify-center mr-4 flex-shrink-0'>
-                    <svg className='w-6 h-6 text-white' fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className='font-bold text-gray-800 mb-1'>Dirección</h4>
-                    <p className='text-gray-600'>
-                      Av. Ecológica #123<br />
-                      Colonia Verde, CP 12345<br />
-                      Ciudad, Estado
-                    </p>
-                  </div>
-                </div>
-
                 {/* Teléfono */}
                 <div className='flex items-start'>
                   <div className='w-12 h-12 bg-[#6FAD46] rounded-full flex items-center justify-center mr-4 flex-shrink-0'>
@@ -194,13 +176,8 @@ export default function contact() {
                   <div>
                     <h4 className='font-bold text-gray-800 mb-1'>Teléfono</h4>
                     <p className='text-gray-600'>
-                      <a href="tel:+1234567890" className='hover:text-[#6FAD46] transition-colors'>
-                        (123) 456-7890
-                      </a>
-                    </p>
-                    <p className='text-gray-600'>
-                      <a href="tel:+1234567891" className='hover:text-[#6FAD46] transition-colors'>
-                        (123) 456-7891
+                      <a href="tel:+529382550290" className='hover:text-[#6FAD46] transition-colors'>
+                        938 255 0290
                       </a>
                     </p>
                   </div>
@@ -220,11 +197,6 @@ export default function contact() {
                         info@xicalango.com
                       </a>
                     </p>
-                    <p className='text-gray-600'>
-                      <a href="mailto:ventas@xicalango.com" className='hover:text-[#6FAD46] transition-colors'>
-                        ventas@xicalango.com
-                      </a>
-                    </p>
                   </div>
                 </div>
 
@@ -238,9 +210,9 @@ export default function contact() {
                   <div>
                     <h4 className='font-bold text-gray-800 mb-1'>Horarios de Atención</h4>
                     <p className='text-gray-600'>
-                      Lunes a Viernes: 8:00 AM - 6:00 PM<br />
-                      Sábados: 9:00 AM - 4:00 PM<br />
-                      Domingos: Solo emergencias
+                      Lun-Vie: 8AM-6PM<br />
+                      Sáb: 9AM-3PM<br />
+                      Dom: Cerrado
                     </p>
                   </div>
                 </div>

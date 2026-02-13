@@ -107,7 +107,7 @@ export default function Services() {
           {servicios.map((servicio) => (
             <div 
               key={servicio.id} 
-              onClick={() => handleServicioClick(servicio.id)}
+              // onClick={() => handleServicioClick(servicio.id)}
               className='bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer group transform hover:-translate-y-2'
             >
               {/* Stack de imágenes */}
@@ -142,13 +142,13 @@ export default function Services() {
                   <div className={`absolute inset-0 bg-gradient-to-br ${servicio.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg`}></div>
                   
                   {/* Icono de ver más */}
-                  <div className='absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                  {/* <div className='absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                     <div className='w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg'>
                       <svg className='w-5 h-5 text-[#6FAD46]' fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                       </svg>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               
@@ -162,12 +162,12 @@ export default function Services() {
                 </p>
                 
                 {/* Botón de acción */}
-                <div className='flex items-center text-[#6FAD46] font-medium text-sm group-hover:text-[#5a9639] transition-colors duration-300'>
+                {/* <div className='flex items-center text-[#6FAD46] font-medium text-sm group-hover:text-[#5a9639] transition-colors duration-300'>
                   <span>Ver más detalles</span>
                   <svg className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300' fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                   </svg>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}
